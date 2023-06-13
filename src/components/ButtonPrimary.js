@@ -2,25 +2,28 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View } from 'react-native-web';
 
 const ButtonPrimary = (props) => {
   return (
-    <TouchableOpacity style={styles.btnStart}>
-      <LinearGradient
-        colors={['rgba(48, 30, 96, 0.3)', 'transparent']}
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 0,
-          height: 60,
-          borderRadius: '1.5rem',
-        }}
-      />
-      <Text style={styles.btnPrimary} >
-        {props.titulo}
-      </Text>
-    </TouchableOpacity>
+    <View>
+      <TouchableOpacity style={styles.btnStart}>
+        <LinearGradient
+          colors={['rgba(48, 30, 96, 0.3)', 'transparent']}
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 0,
+            height: 60,
+            borderRadius: '1.5rem',
+          }}
+        />
+        <Text style={styles.btnPrimary} >
+          {props.titulo}
+        </Text>
+      </TouchableOpacity>
+    </View>
   )
 }
 

@@ -6,9 +6,9 @@ import { Picker } from '@react-native-picker/picker';
 
 const Home = () => {
 
-  const [estado, setEstado] = useState('home')
-  const [segundos, setSegundos] = useState(0)
-  const [minutos, setMinutos] = useState(0)
+  const [estado, setEstado] = useState('contador')
+  const [segundos, setSegundos] = useState(59)
+  const [minutos, setMinutos] = useState(14)
   const [alarmSound, setAlarmSound] = useState([
     {
       id: 1,
@@ -16,6 +16,7 @@ const Home = () => {
       name: 'alarme 1',
       file: 'alarme 1.mp3',
     },
+
     {
       id: 2,
       selected: false,
@@ -45,10 +46,6 @@ const Home = () => {
       return val
     })
     setAlarmSound(alarmTemp)
-  }
-
-  const setStateHome = () => {
-    setEstado('home')
   }
 
   if (estado === 'home') {
@@ -117,7 +114,11 @@ const Home = () => {
     );
   } else if (estado === 'contador') {
     return (
-      <Contador minutos={minutos} segundos={segundos} home={setStateHome} />
+      <Contador
+        minutos={minutos}
+        segundos={segundos}
+        setEstado={setEstado}
+      />
     )
   }
 }
@@ -218,9 +219,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
     borderRadius: '1.5rem',
-    // borderWidth: 1,
     marginBottom: '2rem',
-    // borderColor: '#114',
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

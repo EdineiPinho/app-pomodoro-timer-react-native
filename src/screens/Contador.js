@@ -3,23 +3,25 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Gradient1, Gradient2 } from '../components/Gradient';
 import ButtonPrimary from '../components/ButtonPrimary';
 
-const Contador = ({ minutos, segundos }) => {
-
-
+const Contador = (props) => {
 
   return (
     <View style={styles.container}>
       <Gradient1 />
       <Text style={styles.title1}>Contador</Text>
-      <TouchableOpacity style={{ width: '100%' }} >
-        <ButtonPrimary titulo='Home' />
-      </TouchableOpacity>
+
       <View style={{
         flexDirection: 'row'
       }}>
-        <Text style={styles.textContador}>{('00' + minutos).slice(-2)}</Text>
-        <Text style={styles.textContador}>:{('00' + segundos).slice(-2)}</Text>
+        <Text style={styles.textContador}>{('00' + props.minutos).slice(-2)}</Text>
+        <Text style={styles.textContador}>:{('00' + props.segundos).slice(-2)}</Text>
       </View>
+      <TouchableOpacity
+        style={styles.btnStart}
+        onPress={() => props.setEstado('home')}
+      >
+        <Text style={styles.txtBtnPrimary}>Resetar</Text>
+      </TouchableOpacity>
       <Gradient2 />
     </View>
   )
@@ -32,6 +34,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(80,50,160)',
     alignItems: 'center',
     justifyContent: 'center',
+    textAlign: 'center',
     width: '100vw',
     height: '100vh'
   },
@@ -75,6 +78,11 @@ const styles = StyleSheet.create({
   textContador: {
     color: '#daf',
     fontSize: '4rem'
+  },
+  txtBtnPrimary: {
+    color: '#daf',
+    fontSize: 30,
+    paddingBottom: 4,
   }
 })
 
