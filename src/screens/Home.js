@@ -6,28 +6,29 @@ import { Picker } from '@react-native-picker/picker';
 
 const Home = () => {
 
-  const [estado, setEstado] = useState('contador')
-  const [segundos, setSegundos] = useState(59)
-  const [minutos, setMinutos] = useState(14)
+  const [estado, setEstado] = useState('home')
+  const [segundos, setSegundos] = useState(0)
+  const [minutos, setMinutos] = useState(0)
+  const [message, setMessage] = useState(false)
   const [alarmSound, setAlarmSound] = useState([
     {
       id: 1,
       selected: true,
       name: 'alarme 1',
-      file: 'alarme 1.mp3',
+      file: require('../../assets/alarme1.mp3'),
     },
 
     {
       id: 2,
       selected: false,
       name: 'alarme 2',
-      file: 'alarme 2.mp3',
+      file: require('../../assets/alarme2.mp3'),
     },
     {
       id: 3,
       selected: false,
       name: 'alarme 3',
-      file: 'alarme 3.mp3',
+      file: require('../../assets/alarme3.mp3'),
     },
   ])
 
@@ -48,6 +49,18 @@ const Home = () => {
     setAlarmSound(alarmTemp)
   }
 
+  const timeOut = setTimeout(() => {
+    setMessage(false)
+  }, 4000)
+
+  const handleEstado = () => {
+    if (minutos > 0 || segundos > 0) setEstado('contador')
+    else {
+      setMessage(true)
+      timeOut
+    }
+  }
+
   if (estado === 'home') {
     return (
       <>
@@ -62,12 +75,16 @@ const Home = () => {
               <Picker
                 selectedValue={minutos}
                 onValueChange={(value) => setMinutos(value)}
-                style={styles.picker}
+                style={{ ...styles.picker, gap: 8 }}
               >
                 {
                   numeros.map((numero, index) => {
                     return (
-                      <Picker.Item style={styles.pickerItem} key={index} label={('00' + String(numero)).slice(-2)} value={numero.toString()} />
+                      <Picker.Item
+                        style={{ ...styles.pickerItem, marginHorizontal: 4 }}
+                        key={index}
+                        label={('00' + String(numero)).slice(-2)}
+                        value={numero.toString()} />
                     )
                   })
                 }
@@ -103,9 +120,9 @@ const Home = () => {
               })
             }
           </View>
-          <TouchableOpacity style={styles.btnStart} onPress={() => setEstado('contador')} >
+          <TouchableOpacity style={styles.btnStart} onPress={handleEstado} >
             <Text style={styles.txtBtnPrimary}>
-              Começar
+              {!message ? 'Começar' : 'Defina o tempo'}
             </Text>
           </TouchableOpacity>
           <Gradient2 />
@@ -115,11 +132,17 @@ const Home = () => {
   } else if (estado === 'contador') {
     return (
       <Contador
+        alarm={alarmSound}
         minutos={minutos}
+        setMinutos={setMinutos}
+        setSegundos={setSegundos}
         segundos={segundos}
         setEstado={setEstado}
       />
     )
+  }
+  else {
+    setEstado('home')
   }
 }
 

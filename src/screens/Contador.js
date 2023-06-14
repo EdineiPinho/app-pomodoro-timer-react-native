@@ -1,9 +1,50 @@
-import React from 'react'
+/* eslint-disable react/prop-types */
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Gradient1, Gradient2 } from '../components/Gradient';
-import ButtonPrimary from '../components/ButtonPrimary';
+import { Audio } from 'expo-av';
 
-const Contador = (props) => {
+const Contador = ({ minutos, segundos, setMinutos, setSegundos, setEstado, alarm }) => {
+  const [pause, setPause] = useState(false)
+  if (minutos === 0 && segundos === 0) setEstado('home')
+
+  useEffect(() => {
+    if (!pause) {
+      const timer = setInterval(() => {
+        setSegundos(segundos - 1)
+        if (segundos <= 0 && minutos > 0) {
+          setMinutos(minutos - 1)
+          setSegundos(59)
+          playSound()
+        }
+      }, 1000)
+      return () => clearInterval(timer)
+    }
+  }, [segundos, pause])
+
+  async function playSound() {
+    const soundObject = new Audio.Sound();
+    try {
+      var alarme
+      alarm.map((val) => {
+        if (val.selecionado) {
+          alarme = val.file
+        }
+      })
+      await soundObject.loadAsync(alarme)
+      await soundObject.playAsync()
+    } catch (error) {
+      //
+
+    }
+
+  }
+
+  const handleReset = () => {
+    setMinutos(0)
+    setSegundos(0)
+    setEstado('home')
+  }
 
   return (
     <View style={styles.container}>
@@ -13,14 +54,20 @@ const Contador = (props) => {
       <View style={{
         flexDirection: 'row'
       }}>
-        <Text style={styles.textContador}>{('00' + props.minutos).slice(-2)}</Text>
-        <Text style={styles.textContador}>:{('00' + props.segundos).slice(-2)}</Text>
+        <Text style={styles.textContador}>{('00' + minutos).slice(-2)}</Text>
+        <Text style={{ ...styles.textContador, }}>:{('00' + segundos).slice(-2)}</Text>
       </View>
       <TouchableOpacity
-        style={styles.btnStart}
-        onPress={() => props.setEstado('home')}
+        style={{ ...styles.btnStart, marginTop: '1rem', marginBottom: '.5rem' }}
+        onPress={handleReset}
       >
         <Text style={styles.txtBtnPrimary}>Resetar</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.btnStart}
+        onPress={() => setPause(!pause)}
+      >
+        <Text style={styles.txtBtnPrimary}>{!pause ? 'Pausar' : 'Continuar'}</Text>
       </TouchableOpacity>
       <Gradient2 />
     </View>
