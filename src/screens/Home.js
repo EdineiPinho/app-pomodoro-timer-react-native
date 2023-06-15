@@ -3,6 +3,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Contador from './Contador';
 import { Gradient1, Gradient2 } from '../components/Gradient';
 import { Picker } from '@react-native-picker/picker';
+import alarm1 from '../../assets/alarme1.mp3'
+import alarm2 from '../../assets/alarme2.mp3'
+import alarm3 from '../../assets/alarme3.mp3'
 
 const Home = () => {
 
@@ -15,20 +18,20 @@ const Home = () => {
       id: 1,
       selected: true,
       name: 'alarme 1',
-      file: require('../../assets/alarme1.mp3'),
+      file: alarm1,
     },
 
     {
       id: 2,
       selected: false,
       name: 'alarme 2',
-      file: require('../../assets/alarme2.mp3'),
+      file: alarm2,
     },
     {
       id: 3,
       selected: false,
       name: 'alarme 3',
-      file: require('../../assets/alarme3.mp3'),
+      file: alarm3,
     },
   ])
 

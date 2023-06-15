@@ -6,16 +6,26 @@ import { Audio } from 'expo-av';
 
 const Contador = ({ minutos, segundos, setMinutos, setSegundos, setEstado, alarm }) => {
   const [pause, setPause] = useState(false)
-  if (minutos === 0 && segundos === 0) setEstado('home')
+  // if (minutos === 0 && segundos === 0) setEstado('home')
+
 
   useEffect(() => {
+    const secondsStart = segundos
+    const minutesStart = minutos
     if (!pause) {
       const timer = setInterval(() => {
-        setSegundos(segundos - 1)
+        if (segundos > 0) {
+          setSegundos(segundos - 1)
+        }
         if (segundos <= 0 && minutos > 0) {
           setMinutos(minutos - 1)
           setSegundos(59)
           playSound()
+          reproduzirAudio()
+        }
+        if (minutos === 0 && segundos === 0 && !pause) {
+          setMinutos(minutesStart)
+          setSegundos(secondsStart)
         }
       }, 1000)
       return () => clearInterval(timer)
@@ -23,21 +33,41 @@ const Contador = ({ minutos, segundos, setMinutos, setSegundos, setEstado, alarm
   }, [segundos, pause])
 
   async function playSound() {
-    const soundObject = new Audio.Sound();
+    const soundObject = await Audio.Sound();
     try {
-      var alarme
-      alarm.map((val) => {
+      var alarme;
+      alarm.map(function (val) {
         if (val.selecionado) {
-          alarme = val.file
+          alarme = val.file;
         }
       })
-      await soundObject.loadAsync(alarme)
-      await soundObject.playAsync()
+      await soundObject.loadAsync(alarme);
+      await soundObject.playAsync();
+      // Your sound is playing!
+
+      // Don't forget to unload the sound from memory
+      // when you are done using the Sound object
+      //await soundObject.unloadAsync();
     } catch (error) {
-      //
-
+      // An error occurred!
     }
+  }
 
+  async function reproduzirAudio() {
+    try {
+      var som;
+      alarm.map(function (val) {
+        if (val.selecionado) {
+          som = val.file;
+        }
+      })
+      const { sound } = await Audio.Sound.createAsync(
+        som
+      );
+      await sound.playAsync();
+    } catch (error) {
+      console.log('Erro ao reproduzir o áudio:', error);
+    }
   }
 
   const handleReset = () => {
